@@ -41,10 +41,33 @@ const getAllAdms = async (req_, res) => {
     } catch (error) {
         return res.status(500).json({ mensagem: error.message });
     }
-}
+};
+
+const updateAdm = async (req, res) => {
+    const { campos, valores } = req.atualizacao;
+    const { id } = req.usuario
+    const { senha } = req.body;
+
+    console.log(campos, valores)
+
+    try {
+        let index = 0;
+
+        for (let i of campos) {
+            console.log(i, valores[index])
+            //await knex('admistrators').update({ [i]: valores[index] }).where(id);
+            index++
+        };
+
+        return res.status(200).json({ mensagem: 'Administrador atualizado' })
+    } catch (error) {
+        return res.status(500).json({ mensagem: error.message });
+    };
+};
 
 module.exports = {
     cadAdm,
     login,
-    getAllAdms
+    getAllAdms,
+    updateAdm
 }

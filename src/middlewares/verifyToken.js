@@ -20,7 +20,7 @@ const verifyToken = async (req, res, next) => {
 
         const usuarioBd = await knex('admistrators').select('*').where({ id }).first();
 
-        const { senha: _, objUser } = usuarioBd;
+        const { senha: _, ...objUser } = usuarioBd;
 
         req.usuario = objUser;
 
