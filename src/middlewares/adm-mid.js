@@ -30,7 +30,7 @@ const middlewareAdm = async (req, res, next) => {
 
 const middlewareUpdateAdm = async (req, res, next) => {
     const { nome, email, senha } = req.body;
-    const camposPermitidos = ['nome', 'email', 'senha'];
+    const camposPermitidos = ['nome', 'email'];
     const arrBody = Object.keys(req.body);
     const arrValues = Object.values(req.body);
 
@@ -40,7 +40,7 @@ const middlewareUpdateAdm = async (req, res, next) => {
         return res.status(400).json({ mensagem: 'Somente campos permitidos poderam ser alterados (nome, email, senha)' });
     }
 
-    if (!nome && !email && !senha) {
+    if (!nome && !email) {
         return res.status(400).json({ mensagem: 'Ao menos um campo deve ser informado' });
     }
 
@@ -54,13 +54,6 @@ const middlewareUpdateAdm = async (req, res, next) => {
         return res.status(400).json({ mensagem: 'Email inválido' });
     }
 
-    let novaSenha = senha;
-    if (novaSenha && novaSenha.length < 6) {
-        return res.status(400).json({ mensagem: 'Senha deve ter pelo menos 6 caracteres' });
-    } else if (novaSenha) {
-        novaSenha = await bcrypt.hash(novaSenha, 10);
-    }
-
     try {
         const usuarioBd = await knex('admistrators').select('*');
 
@@ -68,25 +61,10 @@ const middlewareUpdateAdm = async (req, res, next) => {
             return res.status(400).json({ mensagem: 'Email já cadastrado no banco de dados' })
         };
 
-        req.atualizacao = {};
-
-        if (senha) {
-            req.atualizacao = {
-                campos: [...arrBody],
-                valores: [...arrValues, novaSenha]
-            };
-        } else {
-            const indexSenha = arrBody.indexOf('senha');
-            if (indexSenha !== -1) {
-                arrBody.splice(indexSenha, 1); // Remove a chave 'senha' do array
-                arrValues.splice(indexSenha, 1); // Remove o valor correspondente da 'senha' do array
-            }
-
-            req.atualizacao = {
-                campos: arrBody,
-                valores: arrValues
-            };
-        }
+        req.atualizacao = {
+            campos: arrBody,
+            valores: arrValues
+        };
 
         next();
 

@@ -46,16 +46,12 @@ const getAllAdms = async (req_, res) => {
 const updateAdm = async (req, res) => {
     const { campos, valores } = req.atualizacao;
     const { id } = req.usuario
-    const { senha } = req.body;
-
-    console.log(campos, valores)
 
     try {
         let index = 0;
 
         for (let i of campos) {
-            console.log(i, valores[index])
-            //await knex('admistrators').update({ [i]: valores[index] }).where(id);
+            await knex('admistrators').update({ [i]: valores[index] }).where({ id });
             index++
         };
 
