@@ -1,4 +1,5 @@
 const validator = require('validator');
+const { isValid, format, parse } = require('date-fns')
 
 
 const emailValidator = (email) => {
@@ -7,4 +8,10 @@ const emailValidator = (email) => {
     return resposta
 };
 
-module.exports = { emailValidator };
+const dateValidate = (date) => {
+    const confgDate = parse(date, 'dd/MM/yyyy', new Date());
+
+    return isValid(confgDate) && format(confgDate, 'dd/MM/yyyy') === date;
+};
+
+module.exports = { emailValidator, dateValidate };
