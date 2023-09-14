@@ -1,4 +1,5 @@
 const funcoesExtras = require('../utils/functionsExtras');
+const knex = require('../conectionBd');
 
 const middlewareAddTalker = (req, res, next) => {
     const { name, age, talk } = req.body;
@@ -38,4 +39,22 @@ const middlewareAddTalker = (req, res, next) => {
     next()
 };
 
-module.exports = { middlewareAddTalker }
+const middlewareDeleteTalker = async (req, res, next) => {
+    const { id } = req.params;
+    const adm_id = req.usuario.id;
+
+    try {
+        const userBd = await knex('talkers').select('*').where({ id, adm_id }).first();
+
+        if (!userBd) {
+            return res.status(404).json({ mensagem: 'Talker não encontrado!' })
+        }
+
+        next();
+
+    } catch (error) {
+        return res.status(500).json({ mensagem: error.message })
+    }
+}
+
+module.exports = { middlewareAddTalker, middlewareDeleteTalker }

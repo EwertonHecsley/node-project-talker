@@ -30,4 +30,15 @@ const AddTalker = async (req, res) => {
     };
 };
 
-module.exports = { AddTalker }
+const deleteTalker = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await knex('talkers').where({ id }).del()
+        return res.status(200).json({ mensagem: 'Talker Deletado' })
+    } catch (error) {
+        return res.status(500).json({ mensagem: error.message })
+    }
+}
+
+module.exports = { AddTalker, deleteTalker }
