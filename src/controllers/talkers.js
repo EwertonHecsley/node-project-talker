@@ -35,7 +35,7 @@ const deleteTalker = async (req, res) => {
 
     try {
         await knex('talkers').where({ id }).del()
-        return res.status(200).json({ mensagem: 'Talker Deletado' })
+        return res.status(204).json({ mensagem: 'Talker Deletado' })
     } catch (error) {
         return res.status(500).json({ mensagem: error.message })
     }
