@@ -55,6 +55,26 @@ const middlewareDeleteTalker = async (req, res, next) => {
     } catch (error) {
         return res.status(500).json({ mensagem: error.message })
     }
+};
+
+const middlewareGetAllAndFilterTalkers = async (req, res, next) => {
+    const { q } = req.query;
+
+    try {
+        if (!q) {
+            const userTalkerBd = await knex('talkers').select('*');
+            req.resposta = userTalkerBd;
+        } else {
+            // Se 'q' estiver presente, filtra os talkers com base no nome.
+            const userTalkerBd = await knex('talkers').select('*').where('name', 'ilike', `%${q}%`);
+            //const talkerFiltered = userTalkerBd.filter(talker => talker.name.includes(q)) outra forma;
+            req.resposta = userTalkerBd;
+        }
+
+        next();
+    } catch (error) {
+        return res.status(500).json({ mensagem: error.message });
+    };
 }
 
-module.exports = { middlewareAddTalker, middlewareDeleteTalker }
+module.exports = { middlewareAddTalker, middlewareDeleteTalker, middlewareGetAllAndFilterTalkers }

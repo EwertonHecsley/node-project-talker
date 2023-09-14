@@ -39,6 +39,10 @@ const deleteTalker = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ mensagem: error.message })
     }
+};
+
+const getAllAndFilterTalkers = (req, res) => {
+    return res.status(200).json(req.resposta)
 }
 
-module.exports = { AddTalker, deleteTalker }
+module.exports = { AddTalker, deleteTalker, getAllAndFilterTalkers }
